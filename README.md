@@ -19,7 +19,7 @@ The source for the Android app is located here: <https://github.com/Lauszus/Dron
 ### Crane demo
 (1) Select correct drone. Go to < directory where you cloned this git >/src/crazyflie_ros/crazyflie_demo/scripts and edit the file Crane.py. In the main function you must choose which version of veh1. So far we have either percy or q2. One option will be enabled and the other will be commented.
 
-(2) Go to the /devel folder and run the following command
+(2) Go to the devel folder and run the following command
 ```
 source setup.bash
 ```
