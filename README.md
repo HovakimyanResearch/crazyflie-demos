@@ -17,10 +17,13 @@ roslaunch crazyflie_driver crazyflie_percy.launch
 The source for the Android app is located here: <https://github.com/Lauszus/DroneDraw>.
 
 ### Crane demo
+Start crazyflie in center of the room.
+
 1. Setup
   * Connect to Cisco11477 wifi or Ethernet
   * Plug in xbox controller. Press center button of controller to turn on
   * Plug in Crazyradio PA dongle
+  * Point front (red/green lights) of vehicle towards door
   * Power vehicle
   
 2. Edit Config Files
@@ -28,22 +31,25 @@ The source for the Android app is located here: <https://github.com/Lauszus/Dron
   [repo_location]/src/crazyflie_ros/crazyflie_demo/scripts/Crane.py
   In the main function you must choose which version of veh1. So far we have either percy or q2. One option will be enabled and the other will be commented.
 
-  * Vicon Computer IP
-  [repo_location]/src/vicon_bridge/launch/vicon.launch
+  * Set Vicon Computer IP (if not already correct)
+     ```
+     [repo_location]/src/vicon_bridge/launch/vicon.launch
+     ```
 
-3. roscore
-Open terminal and run:
-  ```
-  roscore
-  ```
+3. Start ROS
+ * Open terminal and run:
+   ```
+   roscore
+   ```
 
 4. Enable Joystick
-  Open terminal and run:
+  * Open terminal and run:
   ```
   rosrun joy joy_node
   ```
 
 5. Source bash script for and run roslaunch
+  * Open terminal and run:
   ```
   cd [repo_location]
   source devel/setup.bash
@@ -51,9 +57,10 @@ Open terminal and run:
   ```
   vicon data should be streaming
 
-6. Open terminal
+6. Launch Crazyflie
+ * Open Terminal
   ```
   cd [repo_location]
   ./start[cf|q2]_crane.sh
   ```
-
+7. Ctrl + C to stop
