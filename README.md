@@ -17,20 +17,43 @@ roslaunch crazyflie_driver crazyflie_percy.launch
 The source for the Android app is located here: <https://github.com/Lauszus/DroneDraw>.
 
 ### Crane demo
-(1) Select correct drone. Go to < directory where you cloned this git >/src/crazyflie_ros/crazyflie_demo/scripts and edit the file Crane.py. In the main function you must choose which version of veh1. So far we have either percy or q2. One option will be enabled and the other will be commented.
+1. Setup
+  * Connect to Cisco11477 wifi or Ethernet
+  * Plug in xbox controller. Press center button of controller to turn on
+  * Plug in Crazyradio PA dongle
+  * Power vehicle
+  
+2. Edit Config Files
+  * Drone Name
+  [repo_location]/src/crazyflie_ros/crazyflie_demo/scripts/Crane.py
+  In the main function you must choose which version of veh1. So far we have either percy or q2. One option will be enabled and the other will be commented.
 
-(2) Go to the devel folder and run the following command
-```
-source setup.bash
-```
+  * Vicon Computer IP
+  [repo_location]/src/vicon_bridge/launch/vicon.launch
 
-Run the following commands in separate terminals in order to run the crane demo and replace DRONENAME by either q2 or percy:
-```
-roscore
-rosrun joy joy_node
-roslaunch crazyflie_driver crazyflie_DRONENAME.launch
-./startcf_crane.sh
-```
+3. roscore
+Open terminal and run:
+  ```
+  roscore
+  ```
 
-Do not forget to set the correct Vicon IP at src/vicon_bridge/launch/vicon.launch
+4. Enable Joystick
+  Open terminal and run:
+  ```
+  rosrun joy joy_node
+  ```
+
+5. Source bash script for and run roslaunch
+  ```
+  cd [repo_location]
+  source devel/setup.bash
+  roslaunch crazyflie_driver crazyflie_DRONENAME.launch
+  ```
+  vicon data should be streaming
+
+6. Open terminal
+  ```
+  cd [repo_location]
+  ./start[cf|q2]_crane.sh
+  ```
 
