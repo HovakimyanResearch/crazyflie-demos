@@ -21,7 +21,7 @@ The source for the Android app is located here: <https://github.com/Lauszus/Dron
 Go to the /devel folder and run the following command
 ```
 source setup.bash
-
+```
 
 Run the following commands in separate terminals in order to run the crane demo:
 ```
