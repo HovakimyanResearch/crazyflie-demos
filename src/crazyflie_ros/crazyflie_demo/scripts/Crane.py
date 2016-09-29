@@ -54,9 +54,9 @@ class CraneMode:
 	        self.land_init_z = self.pos_tgt_msg.linear.z
 
             t_landing = t - self.land_init_time
-            self.pos_tgt_msg.linear.x = max(self.land_init_x - 0.25*t_landing, 0)
-            self.pos_tgt_msg.linear.y = max(self.land_init_y - 0.25*t_landing, 0)
-            self.pos_tgt_msg.linear.z = max(self.land_init_z - 0.25*t_landing, 0.05)
+            self.pos_tgt_msg.linear.x = max(self.land_init_x - 0.2*t_landing, 0)
+            self.pos_tgt_msg.linear.y = max(self.land_init_y - 0.2*t_landing, 0)
+            self.pos_tgt_msg.linear.z = max(self.land_init_z - 0.1*t_landing, 0.05)
 
             if self.pos_tgt_msg.linear.x == 0 and self.pos_tgt_msg.linear.y == 0 and self.pos_tgt_msg.linear.z == 0.05: # Wait until it has landed
                     self.done = 1
