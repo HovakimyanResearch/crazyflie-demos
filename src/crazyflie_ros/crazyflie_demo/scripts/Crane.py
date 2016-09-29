@@ -12,6 +12,8 @@ class CraneMode:
     def getCraneCmd(self, data):
         self.Vel_x_cmd = data.axes[3]
         self.Vel_y_cmd = data.axes[4]
+	self.Vel_z_cmd = data.axes[1]
+
 	if self.land == 0:
             self.land = data.buttons[0]
  
@@ -32,17 +34,21 @@ class CraneMode:
 		print('Crane mode')
             self.pos_tgt_msg.linear.x = self.pos_tgt_msg.linear.x - 0.01*self.Vel_x_cmd
             self.pos_tgt_msg.linear.y = self.pos_tgt_msg.linear.y + 0.01*self.Vel_y_cmd 
-            self.pos_tgt_msg.linear.z = 1
+            self.pos_tgt_msg.linear.z = max(self.pos_tgt_msg.linear.z + 0.008*self.Vel_z_cmd, 0.05)
 
-	    if self.pos_tgt_msg.linear.x > 2:
-		self.pos_tgt_msg.linear.x = 2
-            elif self.pos_tgt_msg.linear.x < -2:
-		self.pos_tgt_msg.linear.x = -2
+	    if self.pos_tgt_msg.linear.x > 3:
+		self.pos_tgt_msg.linear.x = 3 
+            elif self.pos_tgt_msg.linear.x < -3:
+		self.pos_tgt_msg.linear.x = -3
 
-	    if self.pos_tgt_msg.linear.y > 2:
+	    if self.pos_tgt_msg.linear.y > 3:
 		self.pos_tgt_msg.linear.y = 2
             elif self.pos_tgt_msg.linear.y < -2:
 		self.pos_tgt_msg.linear.y = -2
+
+	    if self.pos_tgt_msg.linear.z > 2.5:
+		self.pos_tgt_msg.linear.z = 2.5
+
 
 	else:
 	    if self.current_state == 2:
@@ -61,6 +67,8 @@ class CraneMode:
             if self.pos_tgt_msg.linear.x == 0 and self.pos_tgt_msg.linear.y == 0 and self.pos_tgt_msg.linear.z == 0.05: # Wait until it has landed
                     self.done = 1
 
+	
+
 	    #print(self.Vel_x_cmd, self.Vel_y_cmd, self.pos_tgt_msg.linear.x, self.pos_tgt_msg.linear.y)
 
         self.pub.publish(self.pos_tgt_msg)
@@ -73,16 +81,17 @@ class CraneMode:
         self.sub = rospy.Subscriber("/joy", Joy, self.getCraneCmd)
 	self.Vel_x_cmd = 0
 	self.Vel_y_cmd = 0
+	self.Vel_z_cmd = 0
 	self.current_state = 0
 	self.land = 0
 	self.done = 0
-        
+        self.drone = 0
 
 if __name__ == '__main__':
     rospy.init_node('publish_trajectory', anonymous=True)
-    rate = rospy.Rate(100)   
-    veh1 = CraneMode('percy')    ### Initialize the class object
-
+    rate = rospy.Rate(100) 	  
+    veh1 = CraneMode('q2')    ### Initialize the class object
+    #veh1 = CraneMode('percy')
     while not rospy.is_shutdown() and not veh1.done:
         veh1.publishROS()
         rate.sleep()
