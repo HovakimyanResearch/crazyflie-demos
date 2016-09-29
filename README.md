@@ -32,5 +32,5 @@ roslaunch crazyflie_driver crazyflie_DRONENAME.launch
 ./startcf_crane.sh
 ```
 
-Do not forget to set the correct Vicon IP /src/vicon_bridge/launch/vicon.launch
+Do not forget to set the correct Vicon IP at src/vicon_bridge/launch/vicon.launch
 
