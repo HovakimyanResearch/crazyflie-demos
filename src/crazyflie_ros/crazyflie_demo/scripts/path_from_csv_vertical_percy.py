@@ -122,7 +122,7 @@ def set_parameters(str_veh_name, cmds, values):
 
 def turn_leds_on():
     print('Turn LEDs on')
-    set_parameters('percy', ['ring/headlightEnable', 'ring/effect'], [1, 7])
+    set_parameters('percy', ['ring/headlightEnable', 'ring/effect'], [0, 2])
 
 
 def turn_leds_off():
