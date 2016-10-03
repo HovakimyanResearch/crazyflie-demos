@@ -81,8 +81,8 @@ def main(argv):
     data = np.genfromtxt(input_file, delimiter=',') # Load CSV file
 
     #t = data[:, 0]
-    x = 2*(data[:, 1])
-    y = 2*data[:, 2]
+    x = ((data[:, 1]) - .5)*3
+    y = (data[:, 2])*3
     if draw_plot:
         plt.plot(x, y, linestyle='--')
 

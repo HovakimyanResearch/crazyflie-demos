@@ -103,6 +103,8 @@ class Trajectory:
             if self.pos_tgt_msg.linear.x == 0 and self.pos_tgt_msg.linear.z == 0.05: # Wait until it has landed
                     self.done = 1
 
+        self.pos_tgt_msg.linear.y = -self.pos_tgt_msg.linear.x # Fly in y,z-plane
+        self.pos_tgt_msg.linear.x = 0
         self.pub.publish(self.pos_tgt_msg)
 
 

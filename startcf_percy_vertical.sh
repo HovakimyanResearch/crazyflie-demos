@@ -15,8 +15,8 @@ echo 'Enable pathfollowing mode'
 rosparam set /percy/pathfollowing/PF_mode 1
 rosservice call /percy/update_params [pathfollowing/PF_mode] > /dev/null
 
-echo 'Run "path_from_csv_vertical_xz_percy.py"'
-rosrun crazyflie_demo path_from_csv_vertical_xz_percy.py
+echo 'Run "path_from_csv_vertical_percy.py"'
+rosrun crazyflie_demo path_from_csv_vertical_percy.py
 
 echo 'Killing Percy'
 ./killpercy.sh > /dev/null

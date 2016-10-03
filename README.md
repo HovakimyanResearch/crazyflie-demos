@@ -13,7 +13,7 @@ Run the following commands in two separate terminals in order run the drone draw
 ```
 source devel/setup.bash
 roslaunch crazyflie_driver crazyflie_percy.launch
-./startcf_percy_vertical_xz.sh
+./startcf_percy_vertical.sh
 ```
 The source for the Android app is located here: <https://github.com/Lauszus/DroneDraw>.
 
