@@ -15,15 +15,15 @@ source devel/setup.bash
 roslaunch crazyflie_driver crazyflie_percy.launch
 ./startcf_percy_vertical.sh
 ```
-The source for the Android app is located here: <https://github.com/Lauszus/DroneDraw>.
+The source for the Android app is located here: <https://github.com/Lauszus/DroneDraw>. The Android app will upload the path to your Dropbox in the ```~/Dropbox/Apps/DroneDraw``` directory.
 
 To generate a new trajectory based on the path generated from the Android app:
 ```
 ./GeneratePath.py -i ~/Dropbox/Apps/DroneDraw/path.csv -o ~/Dropbox/Apps/DroneDraw/IRL_path.csv
 ```
-This will generate a trajectory using Bezier curves and generate timestamps based on constant velocity.
+This will generate a trajectory using Bezier curves and generate timestamps based on constant velocity. Currently the demo expect the generated path to be located in that particular folder.
 
-Simply add the argument ```-p``` in order to plot the generated path. The argument ```-w``` makes the script wait until the path has changed. This is useful when using it in a live demo, as it will automatically detect when a new path is uploaded to Dropbox and then calculate a trajectory.
+Add the argument ```-p``` in order to plot the generated path. The argument ```-w``` makes the script wait until the path has changed. This is useful when using it in a live demo, as it will automatically detect when a new path is uploaded to Dropbox and then calculate a trajectory automatically.
 
 ### Crane demo
 Start crazyflie in center of the room.
