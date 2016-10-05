@@ -4,7 +4,7 @@
 from __future__ import print_function
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.misc import comb
+from scipy.special import binom
 from math import sqrt, floor
 import os
 import time
@@ -14,7 +14,7 @@ import getopt
 
 def bernstein_polynomial(n, t, k):
     """Return the Bernstein polynomial of n, k as a function of t."""
-    return comb(n, k)*(1-t)**(n-k)*t**k
+    return binom(n, k)*(1-t)**(n-k)*t**k # Note that binom is much faster than using comb
 
 
 def bernstein_matrix(n, t):
@@ -22,12 +22,12 @@ def bernstein_matrix(n, t):
     return np.array([[bernstein_polynomial(n, i, k) for k in range(n + 1)] for i in t])
 
 
-def path_length(x, y):
+def distance_between_points(x, y):
     """
-    Return the length of a path given by its x,y-coordinates.
-    This is only a good assumptions when the path has a lot of samples.
+    Return the distance between each point in a path given by its x,y-coordinates.
+    The total path length is given by the sum. This is only a good assumptions when the path has a lot of samples.
     """
-    return sum([sqrt((x[i] - x[i - 1]) ** 2 + (y[i] - y[i - 1]) ** 2) for i in range(1, len(x))])
+    return np.array([sqrt((x[i] - x[i - 1]) ** 2 + (y[i] - y[i - 1]) ** 2) for i in range(1, len(x))])
 
 
 def print_usage(status=None):
@@ -75,7 +75,8 @@ def main(argv):
             sys.stdout.flush()
             time.sleep(1)
             print('.', end='')
-        print('') # New line
+        print() # New line
+
     print('Calculating Bezier path')
 
     data = np.genfromtxt(input_file, delimiter=',') # Load CSV file
@@ -114,10 +115,9 @@ def main(argv):
 
     # Generate time-stamps
     v_max = 0.1
-    t = np.empty(bezier_x.shape)
-    for i in range(len(t)):
-        length = path_length(bezier_x[:i+1], bezier_y[:i+1])
-        t[i] = length / v_max
+    # Prepend distance zero and then calculate the distance between each point
+    length = np.append([0], distance_between_points(bezier_x, bezier_y), axis=0)
+    t = np.cumsum(length) / v_max # Calculate time-stamps based on constant velocity
 
     np.savetxt(output_file, np.transpose([t, bezier_x, bezier_y]), delimiter=',', fmt='%.8f') # Save CSV file
 
