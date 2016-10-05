@@ -1,9 +1,8 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(crazyflie_cpp)
-### YHJ: I added some lines to use Eigen which is used for Kalman Filtering.
+### YHJ: I added some lines to use Eigen3 which is used for Kalman Filtering.
 find_package(catkin)
-find_package(catkin REQUIRED cmake_modules)
-find_package(Eigen REQUIRED) 
+find_package(Eigen3 REQUIRED)
 find_library(USB_LIB usb-1.0)
 
 # Enable C++11
@@ -19,11 +18,10 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  INCLUDE_DIRS include
+  INCLUDE_DIRS include ${EIGEN3_INCLUDE_DIR}
   LIBRARIES crazyflie_cpp
   CATKIN_DEPENDS
   DEPENDS ${USB_LIB}
-  DEPENDS Eigen
 )
 
 ###########
@@ -32,9 +30,7 @@ catkin_package(
 
 ## Additional include folders
 include_directories(
-  ${Eigen_INCLUDE_DIRS} 
   include/crazyflie_cpp
-  ${Eigen_LIBRARIES}
 )
 
 ## Declare a cpp library
