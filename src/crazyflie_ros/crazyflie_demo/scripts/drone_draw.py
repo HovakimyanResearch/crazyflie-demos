@@ -4,6 +4,7 @@ import rospy
 import numpy as np
 from geometry_msgs.msg import Twist
 import os
+import sys
 
 from crazyflie_driver.srv import UpdateParams
 
@@ -31,17 +32,37 @@ class Trajectory:
         self.z_term = self.waypoint_data[2][-1]
 
         # Initialize ROS publisher
+        self.str_veh_name = str_veh_name
         self.pos_tgt_msg = Twist()
-        self.pub = rospy.Publisher('/' + str_veh_name + '/cmd_path', Twist, queue_size=1)
+        self.pub = rospy.Publisher('/' + self.str_veh_name + '/cmd_path', Twist, queue_size=1)
         self.init_ROS_time = rospy.Time.now()
         self.current_state = 0
         self.done = 0
-        turn_leds_off()
+        self.turn_leds_off()
+
+    def set_parameters(self, cmds, values):
+        """See: https://wiki.bitcraze.io/projects:crazyflie2:expansionboards:ledring#parameters"""
+        for cmd, values in zip(cmds, values):
+            rospy.set_param('/' + self.str_veh_name + '/' + cmd, values)
+        rospy.wait_for_service('/' + self.str_veh_name + '/update_params')
+        try:
+            update_params = rospy.ServiceProxy('/' + self.str_veh_name + '/update_params', UpdateParams)
+            update_params(cmds)
+        except rospy.ServiceException as e:
+            print('Service call failed: %s' % e)
+
+    def turn_leds_on(self):
+        print('Turn LEDs on')
+        self.set_parameters(['ring/headlightEnable', 'ring/effect'], [0, 2])
+
+    def turn_leds_off(self):
+        print('Turn LEDs off')
+        self.set_parameters(['ring/headlightEnable', 'ring/effect'], [0, 0])
 
     def publishROS(self):
         t = rospy.Time.now().to_sec() - self.init_ROS_time.to_sec()
 
-        # Add take off #
+        # Add take off
         if t < 5:
             if self.current_state == 0:
                 self.current_state = 1
@@ -50,7 +71,7 @@ class Trajectory:
             self.pos_tgt_msg.linear.y = 0.0
             self.pos_tgt_msg.linear.z = min(max(0.6*t, 0.0), 0.5)
 
-        # Move to the initial position #
+        # Move to the initial position
         elif 5 <= t < 10:
             if self.current_state == 1:
                 self.current_state = 2
@@ -59,11 +80,11 @@ class Trajectory:
             self.pos_tgt_msg.linear.y = 0.0
             self.pos_tgt_msg.linear.z = (t-5)/5 * self.z_init + 0.5
 
-        # Position Holding #
+        # Position Holding
         elif 10 <= t < 15:
             if self.current_state == 2:
                 self.current_state = 3
-                print('Position Holding')
+                print('Position hold')
             self.pos_tgt_msg.linear.x = self.x_init
             self.pos_tgt_msg.linear.y = 0.0
             self.pos_tgt_msg.linear.z = self.z_init + 0.5
@@ -72,8 +93,8 @@ class Trajectory:
         elif 15 <= t < 15 + self.total_path_time:
             if self.current_state == 3:
                 self.current_state = 4
-                print('Path Flight')
-                turn_leds_on()
+                print('Path flight')
+                self.turn_leds_on()
             t_path = t - 15
             self.pos_tgt_msg.linear.x = np.interp(t_path, self.waypoint_data[0], self.waypoint_data[1])
             self.pos_tgt_msg.linear.y = 0.0
@@ -85,8 +106,8 @@ class Trajectory:
         elif 15 + self.total_path_time <= t < 20 + self.total_path_time:
             if self.current_state == 4:
                 self.current_state = 5
-                print('Position Hold before Landing')
-                turn_leds_off()
+                print('Position hold before landing')
+                self.turn_leds_off()
             self.pos_tgt_msg.linear.x = self.x_term
             self.pos_tgt_msg.linear.y = 0.0
             self.pos_tgt_msg.linear.z = self.z_term+0.5
@@ -108,32 +129,14 @@ class Trajectory:
         self.pub.publish(self.pos_tgt_msg)
 
 
-def set_parameters(str_veh_name, cmds, values):
-    """See: https://wiki.bitcraze.io/projects:crazyflie2:expansionboards:ledring#parameters"""
-    for cmd, values in zip(cmds, values):
-        rospy.set_param('/' + str_veh_name + '/' + cmd, values)
-    rospy.wait_for_service('/' + str_veh_name + '/update_params')
-    try:
-        update_params = rospy.ServiceProxy('/' + str_veh_name + '/update_params', UpdateParams)
-        update_params(cmds)
-    except rospy.ServiceException as e:
-        print('Service call failed: %s' % e)
-
-
-def turn_leds_on():
-    print('Turn LEDs on')
-    set_parameters('percy', ['ring/headlightEnable', 'ring/effect'], [0, 2])
-
-
-def turn_leds_off():
-    print('Turn LEDs off')
-    set_parameters('percy', ['ring/headlightEnable', 'ring/effect'], [0, 0])
-
-
 if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        print("Please provide drone name as the first argument")
+        sys.exit(2)
+
     rospy.init_node('publish_trajectory', anonymous=True)
     rate = rospy.Rate(100)
-    veh1 = Trajectory('IRL_path.csv', 'percy')    ### Initialize the class object
+    veh1 = Trajectory('IRL_path.csv', sys.argv[1]) # Initialize the class object
 
     while not rospy.is_shutdown() and not veh1.done:
         veh1.publishROS()

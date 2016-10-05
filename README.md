@@ -11,10 +11,11 @@ catkin_make
 
 Run the following commands in two separate terminals in order run the drone draw demo:
 ```
-source devel/setup.bash
-roslaunch crazyflie_driver crazyflie_percy.launch
-./startcf_percy_vertical.sh
+source devel/setup.bash && roslaunch crazyflie_driver crazyflie_percy.launch vicon_ip:=192.168.1.110:801
+./startcf_drone_draw.sh percy
 ```
+Where ```vicon_ip:=192.168.1.110:801``` is IP adress of the computer running Vicon.
+
 The source for the Android app is located here: <https://github.com/Lauszus/DroneDraw>. The Android app will upload the path to your Dropbox in the ```~/Dropbox/Apps/DroneDraw``` directory.
 
 To generate a new trajectory based on the path generated from the Android app:
