@@ -1,5 +1,5 @@
 <launch>
-    <arg name="vicon_ip" default="192.168.1.111:801" />
+    <arg name="vicon_ip" default="192.168.1.110:801" />
 
 	<node pkg="vicon_bridge" type="vicon_bridge" name="vicon" output="screen">
 		<param name="stream_mode" value="ClientPull" type="str" />

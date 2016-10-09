@@ -3,7 +3,7 @@
 <launch>
   <arg name="uri1" default="radio://0/77/2M/E7E7E7E7E7" />
   <!--arg name="uri2" default="radio://0/80/2M/E7E7E7E712" /-->
-  <!--arg name="joy_dev1" default="/dev/input/js2" /-->
+  <arg name="joy_dev1" default="/dev/input/js0" />
 
   <include file="$(find crazyflie_driver)/launch/crazyflie_server.launch">
   </include>
@@ -15,33 +15,13 @@
       <arg name="tf_prefix" value="/q2" />
     </include>
 
-    <!--node name="joy" pkg="joy" type="joy_node" output="screen"-->
-      <!--param name="dev" value="$(arg joy_dev1)" /-->
-      <!--param name="autorepeat_rate" value="10.0" /--> 
-      <!--param name="coalesce_interval" value="0.001" /-->
-      <!--param name="deadzone" value="0.1" /--> 
-      
-    <!--/node-->
+    <node name="joy" pkg="joy" type="joy_node" output="screen">
+      <param name="dev" value="$(arg joy_dev1)" />
+      <param name="deadzone" value="0.16" />
+    </node>
   
   </group>
 
-
-  <!--group ns="/danny"-->
-    <!--Comment-->
-    <!--include file="$(find crazyflie_driver)/launch/crazyflie_add.launch"-->
-      <!--arg name="uri" value="$(arg uri2)" /-->
-      <!--arg name="tf_prefix" value="/danny" /-->
-    <!--/include-->
-
-    <!--node name="joy" pkg="joy" type="joy_node" output="screen"-->
-      <!--param name="dev" value="$(arg joy_dev1)" /-->
-      <!--param name="autorepeat_rate" value="10.0" /--> 
-      <!--param name="coalesce_interval" value="0.001" /-->
-      <!--param name="deadzone" value="0.1" /--> 
-      
-    <!--/node-->
-  
-  <!--/group-->
 
   <!-- run vicon bridge -->
   <include file="$(find vicon_bridge)/launch/vicon.launch"/>
