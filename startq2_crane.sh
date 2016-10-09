@@ -11,9 +11,9 @@ rosservice call /q2/update_params [ring/headlightEnable] > /dev/null
 rosparam set /q2/ring/effect 7
 rosservice call /q2/update_params [ring/effect] > /dev/null
 
-echo 'Enable pathfollowing mode'
-rosparam set /q2/pathfollowing/PF_mode 1
-rosservice call /q2/update_params [pathfollowing/PF_mode] > /dev/null
+# echo 'Enable pathfollowing mode'
+# rosparam set /q2/pathfollowing/PF_mode 1
+# rosservice call /q2/update_params [pathfollowing/PF_mode] > /dev/null
 
 echo 'Run "Crane.py"'
 rosrun crazyflie_demo Crane.py
