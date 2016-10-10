@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(crazyflie_cpp)
 ### YHJ: I added some lines to use Eigen3 which is used for Kalman Filtering.
 find_package(catkin)
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
 find_package(Eigen3 REQUIRED)
 find_library(USB_LIB usb-1.0)
 

@@ -30,7 +30,7 @@
 #include <crazyflie_cpp/Crazyflie.h>
 using namespace Eigen; // YHJ: This is for matrix arithmatics.
 
-constexpr double pi() { return std::atan(1)*4; }
+constexpr double pi() { return M_PI; }
 
 double degToRad(double deg) {
     return deg / 180.0 * pi();

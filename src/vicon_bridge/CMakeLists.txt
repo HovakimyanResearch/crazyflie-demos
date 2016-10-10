@@ -39,7 +39,11 @@ catkin_package(CATKIN_DEPENDS
 )
 
 # check for platform and use the right Vicon SDK
-if(CMAKE_SIZEOF_VOID_P MATCHES "8")
+if(APPLE)
+    set(VICON_SDK             vicon_sdk/Vicon_DataStream_SDK_1.3.0.57137h_MAC/)
+    set(VICON_SDK_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/${VICON_SDK})
+    set(VICON_SDK_LINK_DIR    ${PROJECT_SOURCE_DIR}/${VICON_SDK})
+elseif(CMAKE_SIZEOF_VOID_P MATCHES "8")
     set(VICON_SDK             vicon_sdk/Vicon_SDK_1.3_Linux/64-bit/)
     set(VICON_SDK_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/${VICON_SDK})
     set(VICON_SDK_LINK_DIR    ${PROJECT_SOURCE_DIR}/${VICON_SDK})
@@ -47,14 +51,14 @@ elseif(CMAKE_SIZEOF_VOID_P MATCHES "4")
     set(VICON_SDK             vicon_sdk/Vicon_SDK_1.3_Linux/32-bit/)
     set(VICON_SDK_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/${VICON_SDK})
     set(VICON_SDK_LINK_DIR    ${PROJECT_SOURCE_DIR}/${VICON_SDK})
-else(CMAKE_SIZEOF_VOID_P MATCHES "8")
+else()
     message(FATAL_ERROR "unable to detect platform")
-endif (CMAKE_SIZEOF_VOID_P MATCHES "8")
+endif()
 find_library(VICON_SDK_LIBRARY ViconDataStreamSDK_CPP PATHS ${VICON_SDK_LINK_DIR})
 
 include_directories(src ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${VICON_SDK_INCLUDE_DIR})
 
-add_library(msvc_bridge src/msvc_bridge.cpp)
+add_library(msvc_bridge STATIC src/msvc_bridge.cpp)
 
 add_executable(vicon_bridge src/vicon_bridge.cpp)
 target_link_libraries(vicon_bridge

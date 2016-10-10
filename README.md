@@ -2,6 +2,13 @@
 
 First download and install ROS Indigo: <http://wiki.ros.org/indigo/Installation/Ubuntu>.
 
+See the following repository for instructions on how to compile ROS for Mac OS X: <https://github.com/mikepurvis/ros-install-osx>.
+
+In order for the Vicon bridge to work you need to place the dylibs in /usr/lib and mark them as executable:
+```
+sudo cp libViconDataStreamSDK_CPP.dylib /usr/libsudo cp libDebugServices.dylib /usr/libsudo chmod 755 /usr/lib/libViconDataStreamSDK_CPP.dylib sudo chmod 755 /usr/lib/ libDebugServices.dylib
+```
+
 Then build this ROS packages:
 ```
 catkin_make
