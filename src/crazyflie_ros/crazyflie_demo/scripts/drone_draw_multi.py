@@ -15,7 +15,7 @@ class Trajectory:
 
         # Scale the DATA in time and space
         #self.max_time_index = self.data[0][-1]
-        #self.total_path_time = 30.0  #[sec] total path flight time in real time
+        self.total_path_time = self.data[0][-1] # [sec] total path flight time in real time
         #self.scale_time = self.total_path_time/self.max_time_index
 
         #self.max_x = np.max(np.abs(self.data[1]))
@@ -27,8 +27,8 @@ class Trajectory:
         #self.scale_pos = min(self.scale_x, self.scale_y) # Find the minimum scaling
 
         # TODO: Do not hardcode scaling
-        self.scale_time = 1.0006671114076051
-        self.scale_pos = 0.01189532117367169
+        self.scale_time = 1
+        self.scale_pos = 0.012178290168060404
 
         print('Scaling', self.scale_time, self.scale_pos)
 

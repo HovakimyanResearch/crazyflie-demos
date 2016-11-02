@@ -12,7 +12,7 @@ if __name__ == "__main__":
     plt.plot(data1[1, :], data1[2, :], label='agent1', color='blue')
     plt.plot(data2[1, :], data2[2, :], label='agent2', color='green')
     plt.plot(data3[1, :], data3[2, :], label='agent3', color='red')
-    #plt.legend()
+    plt.legend(prop={'size': 10})
     ax = plt.gca()
     ax.set_aspect('equal')
     plt.savefig('agents_plot.pdf', bbox_inches='tight')
