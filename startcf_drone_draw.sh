@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 
 if [ "$#" -ne 1 ]; then
     echo "Please provide drone name as the first argument"

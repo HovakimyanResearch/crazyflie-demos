@@ -1,12 +1,14 @@
 #!/bin/bash
 
-if [ "$#" -ne 1 ]; then
-    echo "Please provide drone name as the first argument"
+if [ "$#" -lt 1 ]; then
+    echo "Please provide drone names as arguments"
     exit
 fi
 
 source devel/setup.bash
 
-echo "Killing \"$1\""
-rosparam set /"$1"/pathfollowing/PF_mode 0
-rosservice call /"$1"/update_params [pathfollowing/PF_mode] > /dev/null
+for i in "$@"; do
+    echo "Killing \"$i\""
+    rosparam set /"$i"/pathfollowing/PF_mode 0
+    rosservice call /"$i"/update_params [pathfollowing/PF_mode] > /dev/null
+done

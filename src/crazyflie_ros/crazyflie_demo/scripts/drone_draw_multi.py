@@ -14,18 +14,25 @@ class Trajectory:
         self.data = np.genfromtxt('agents/' + str_csv_file_name, delimiter=',')
 
         # Scale the DATA in time and space
-        self.max_time_index = self.data[0][-1]
-        self.total_path_time = 60.0  #[sec] total path flight time in real time
-        self.scale_time = self.total_path_time/self.max_time_index
+        #self.max_time_index = self.data[0][-1]
+        #self.total_path_time = 30.0  #[sec] total path flight time in real time
+        #self.scale_time = self.total_path_time/self.max_time_index
 
-        self.max_x = np.max(np.abs(self.data[1]))
-        self.max_y = np.max(np.abs(self.data[2]))
-        self.x_limit = 3.0 # Limit to 3 meters
-        self.y_limit = 3.0
-        self.scale_x = self.x_limit/self.max_x
-        self.scale_y = self.y_limit/self.max_y
+        #self.max_x = np.max(np.abs(self.data[1]))
+        #self.max_y = np.max(np.abs(self.data[2]))
+        self.pos_limit = 3 # Limit to +- 1.5 meters
+        #self.scale_x = self.pos_limit/self.max_x
+        #self.scale_y = self.pos_limit/self.max_y
 
-        self.waypoint_data = np.array([self.data[0]*self.scale_time, self.data[1]*self.scale_x, self.data[2]*self.scale_y])
+        #self.scale_pos = min(self.scale_x, self.scale_y) # Find the minimum scaling
+
+        # TODO: Do not hardcode scaling
+        self.scale_time = 1.0006671114076051
+        self.scale_pos = 0.01189532117367169
+
+        print('Scaling', self.scale_time, self.scale_pos)
+
+        self.waypoint_data = np.array([self.data[0]*self.scale_time, self.data[1]*self.scale_pos - self.pos_limit, self.data[2]*self.scale_pos]) # Scale and add offset
         self.x_init = self.waypoint_data[1][0]
         self.y_init = self.waypoint_data[2][0]
         self.z_init = 1 # Fly at 1 m
@@ -40,6 +47,7 @@ class Trajectory:
         self.current_state = 0
         self.done = 0
         self.turn_leds_off()
+        self.set_pathfollowing_mode(1)
 
     def set_parameters(self, cmds, values):
         """See: https://wiki.bitcraze.io/projects:crazyflie2:expansionboards:ledring#parameters"""
@@ -60,7 +68,14 @@ class Trajectory:
         print(self.str_veh_name, 'Turn LEDs off')
         self.set_parameters(['ring/headlightEnable', 'ring/effect'], [0, 0])
 
+    def set_pathfollowing_mode(self, val):
+        print(self.str_veh_name, 'Set PF mode', val)
+        self.set_parameters(['pathfollowing/PF_mode'], [val])
+
     def publishROS(self):
+        if self.done:
+            return
+
         t = rospy.Time.now().to_sec() - self.init_ROS_time.to_sec()
 
         # Add take off
@@ -132,7 +147,8 @@ class Trajectory:
             self.pos_tgt_msg.linear.y = max(self.land_init_y - 0.2*t_landing, 0)
             self.pos_tgt_msg.linear.z = max(self.land_init_z - 0.1*t_landing, 0.05)
             if self.pos_tgt_msg.linear.x == 0 and self.pos_tgt_msg.linear.y == 0 and self.pos_tgt_msg.linear.z == 0.05: # Wait until it has landed
-                    self.done = 1
+                self.set_pathfollowing_mode(0)
+                self.done = 1
 
         self.pub.publish(self.pos_tgt_msg)
 
@@ -149,9 +165,12 @@ if __name__ == '__main__':
         print("Initialize", sys.argv[i])
         veh.append(Trajectory('agent%d.csv' % i, sys.argv[i])) # Initialize the class objects
 
-    while not rospy.is_shutdown():
+    done = False
+    while not rospy.is_shutdown() and not done:
+        done = True
         for i in range(len(veh)):
-            if veh[i].done:
-                break
+            if not veh[i].done:
+                done = False # If all are done exit for-loop
             veh[i].publishROS()
         rate.sleep()
+    print('All drones has landed')
