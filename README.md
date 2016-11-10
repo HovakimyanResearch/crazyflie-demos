@@ -33,6 +33,10 @@ This will generate a trajectory using Bezier curves and generate timestamps base
 
 Add the argument ```-p``` in order to plot the generated path. The argument ```-w``` makes the script wait until the path has changed. This is useful when using it in a live demo, as it will automatically detect when a new path is uploaded to Dropbox and then calculate a trajectory automatically.
 
+#### Video demonstraion
+
+<a href="https://youtu.be/3WINNNvbyo4" target="_blank"><img src="http://img.youtube.com/vi/3WINNNvbyo4/0.jpg" alt="Painting with drones" width="240" height="180" border="10" /></a>
+
 ### Crane demo
 Start crazyflie in center of the room.
 
