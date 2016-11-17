@@ -2,7 +2,7 @@
 
 <launch>
   <arg name="uri1" default="radio://0/60/2M/E7E7E7E711" />
-  <arg name="uri2" default="radio://0/60/2M/E7E7E7E712" />
+  <arg name="uri2" default="radio://0/80/2M/E7E7E7E712" />
   <!--arg name="joy_dev1" default="/dev/input/js2" /-->
   <arg name="vicon_ip" default="192.168.1.138:801" />
 
